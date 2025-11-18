@@ -1,97 +1,67 @@
-## Hi there 
-
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Sederhana</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toko Online Sederhana</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-        header {
-            background: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .product {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-            text-align: center;
-        }
-
-        .product img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .product h3 {
-            margin: 10px 0 5px;
-        }
-
-        .product p {
-            color: #666;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 15px;
-            background: #2196f3;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: #0b7dda;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+        h1 { text-align: center; }
+        .product { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 10px; }
+        button { padding: 6px 12px; cursor: pointer; border-radius: 6px; border: none; background: #2d89ef; color: white; }
+        input { padding: 5px; width: 100px; }
     </style>
 </head>
-
 <body>
+    <h1>Toko Online – Edit Produk & Harga</h1><div id="product-list"></div>
 
-<header>Toko Online Sederhana</header>
+<h2>Tambah Produk</h2>
+<input id="newName" placeholder="Nama produk" />
+<input id="newPrice" placeholder="Harga" type="number" />
+<button onclick="addProduct()">Tambah</button>
 
-<div class="container">
-    <div class="product">
-        <img src="https://via.placeholder.com/250" alt="Produk 1">
-        <h3>Produk 1</h3>
-        <p>Rp 50.000</p>
-        <a class="btn" href="#">Beli</a>
-    </div>
+<script>
+    let products = [
+        { id: 1, name: "Produk A", price: 50000 },
+        { id: 2, name: "Produk B", price: 75000 }
+    ];
 
-    <div class="product">
-        <img src="https://via.placeholder.com/250" alt="Produk 2">
-        <h3>Produk 2</h3>
-        <p>Rp 75.000</p>
-        <a class="btn" href="#">Beli</a>
-    </div>
+    function renderProducts() {
+        const list = document.getElementById("product-list");
+        list.innerHTML = "";
 
-    <div class="product">
-        <img src="https://via.placeholder.com/250" alt="Produk 3">
-        <h3>Produk 3</h3>
-        <p>Rp 99.000</p>
-        <a class="btn" href="#">Beli</a>
-    </div>
+        products.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "product";
+            div.innerHTML = `
+                <b>${p.name}</b><br>
+                Harga: Rp <input type="number" value="${p.price}" onchange="updatePrice(${p.id}, this.value)"> <br><br>
+                <button onclick="deleteProduct(${p.id})">Hapus</button>
+            `;
+            list.appendChild(div);
+        });
+    }
 
-</div>
+    function updatePrice(id, newPrice) {
+        const product = products.find(p => p.id === id);
+        if (product) product.price = parseInt(newPrice);
+    }
+
+    function addProduct() {
+        const name = document.getElementById("newName").value;
+        const price = document.getElementById("newPrice").value;
+        if (!name || !price) return alert("Lengkapi nama dan harga!");
+
+        products.push({ id: Date.now(), name, price: parseInt(price) });
+        renderProducts();
+    }
+
+    function deleteProduct(id) {
+        products = products.filter(p => p.id !== id);
+        renderProducts();
+    }
+
+    renderProducts();
+</script>
 
 </body>
 </html>
